@@ -1,16 +1,20 @@
 # Structured Extraction With Python
 
-Extract invoice details from plain text into structured JSON using the native ai& Python SDK.
+Extract invoice details from plain text into structured JSON. The recipe has two variants:
+
+- `openai_extraction.py` uses the OpenAI SDK and `response_format` with a strict JSON schema.
+- `anthropic_extraction.py` uses the Anthropic SDK and a forced tool call. The schema is the tool's `input_schema`, and the result is the tool call's input.
 
 This recipe builds on the ai& [Structured Outputs](https://docs.aiand.com/capabilities/structured-outputs/) docs.
 
 ## What This Demonstrates
 
-- Creating a chat completion with the native ai& Python SDK.
-- Asking the model for JSON that follows a strict schema.
-- Parsing the model output as JSON.
-- Validating the parsed output locally with `jsonschema`.
+- Calling ai& with the OpenAI SDK (base URL `https://api.aiand.com/v1`) and the Anthropic SDK (base URL `https://api.aiand.com`).
+- Asking the model for output that follows a strict schema.
+- Validating the output locally with `jsonschema`.
 - Reading `AIAND_API_KEY` from the environment without hardcoding credentials.
+
+`invoice.py` holds the text, the schema and the validation that both variants use.
 
 ## Setup
 
@@ -22,12 +26,16 @@ python -m pip install -r requirements.txt
 export AIAND_API_KEY=your-aiand-api-key
 ```
 
-For local development, you can also place `AIAND_API_KEY=...` in an ignored `.env.test` file in this directory.
-
 ## Run
 
 ```sh
-python structured_extraction.py
+python openai_extraction.py
+python anthropic_extraction.py
 ```
 
-The script prints validated JSON matching the invoice extraction schema.
+Each script prints validated JSON that matches the invoice schema. To use a different model, set `AIAND_MODEL`.
+
+## Notes on the Anthropic variant
+
+- The Messages API on ai& does not support `output_config.format` yet. It ignores the parameter, and the model answers in free text. Use a forced tool call, as this recipe does.
+- Find the result by the `tool_use` block. Do not rely on `stop_reason`: for a forced tool call, ai& can return `end_turn` instead of `tool_use`.

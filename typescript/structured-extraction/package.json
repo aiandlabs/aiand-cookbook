@@ -3,16 +3,22 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "tsx structured_extraction.ts",
-    "check": "tsc --noEmit"
+    "start": "tsx openai_extraction.ts",
+    "check": "tsc --noEmit",
+    "start:openai": "tsx openai_extraction.ts",
+    "start:anthropic": "tsx anthropic_extraction.ts"
   },
   "dependencies": {
-    "@aiand/sdk": "^0.1.0",
-    "zod": "^4.0.0"
+    "@anthropic-ai/sdk": "^0.133.0",
+    "openai": "^7.33.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/node": "^20.19.0",
     "tsx": "^4.20.0",
     "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
